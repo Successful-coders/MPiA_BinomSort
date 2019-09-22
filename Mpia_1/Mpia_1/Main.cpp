@@ -167,6 +167,7 @@ void sort(Table* table, int root, int bottom, int code)
 					maxChild = root * 2 + 1;
 				}
 			}
+
 		}
 		if (code == 0)
 		{
