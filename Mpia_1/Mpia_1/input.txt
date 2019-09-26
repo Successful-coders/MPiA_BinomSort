@@ -1,9 +1,9 @@
-13 10 2000 Konstantinov Ivanovic Ivan
-31 10 2000 Nonstantinov Avan Knfd
-30 9 2000 Bvanov Konstantin JNF
-19 11 1998 Bvanov Alex jfndsk
-20 12 2000 Bvanov Egor kwfwk
-21 4 1900 Xonstantinov Ivan kfjd
-23 5 2000 Donstantinov Ivan kfdk
-16 6 1999 Aonstantinov Aonstantin plre
-14 7 1997 Yonstantinov Konstantin olekr
+13 10 2000 Konstantinov Ivanovic
+31 10 2000 Nonstantinov AvanKnfd
+30 9 2000 Bvanov KonstantinJNF
+19 11 1998 Bvanov Alexjfndsk
+20 12 2000 Bvanov Egor
+21 4 1900 Xonstantinov Ivan
+23 5 2000 Donstantinov Ivan
+16 6 1999 Aonstantinov Aonstantin
+14 7 1997 Yonstantinov Konstantin

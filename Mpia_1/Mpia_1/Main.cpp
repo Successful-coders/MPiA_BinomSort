@@ -1,14 +1,16 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <conio.h>
 #include <string>
 #include <locale.h>
-#include "templates.h"
 #include <fstream>
 #include <iostream>
+#include <chrono>
+#include <vector>
+#include <stdlib.h>
 #define N 50
 using namespace std;
-
+unsigned int M = 0;
 ifstream fin;
 
 
@@ -28,7 +30,7 @@ struct Table
 	int count = 0;
 };
 
-void AddTable(Table* table, int day, int month, int year, string firstName, string secondName, string thirdName)
+void AddTable(Table* table, int day, int month, int year, string firstName, string secondName)
 {
 	int tableCount = table->count;
 	if (tableCount < N)
@@ -39,8 +41,6 @@ void AddTable(Table* table, int day, int month, int year, string firstName, stri
 		table->elements[place].year = year;
 		table->elements[place].firstName = firstName;
 		table->elements[place].secondName = secondName;
-		table->elements[place].thirdName = thirdName;
-
 		table->count++;
 	}
 }
@@ -51,93 +51,31 @@ void ReadFile(Table* table)
 	int day, month, year;
 	string firstName;
 	string secondName;
-	string thirdName;
 
 
-	while (!fin.eof())
+	while (!fin.eof() && table->count<N)
 	{
 		fin >> day >> month >> year;
-		fin >> firstName >> secondName >> thirdName;
-		AddTable(table, day, month, year, firstName, secondName, thirdName);
+		fin >> firstName >> secondName;
+		AddTable(table, day, month, year, firstName, secondName);
 	}
 }
 
 template <typename T1>
 
-bool IsBigger(T1 firstElement, T1 secondElement, T1 thirdElement, T1 firstElement2, T1 secondElement2, T1 thirdElement2)
+int IsBigger(T1 firstElement, T1 firstElement2)
 {
 	
 	if (firstElement > firstElement2)
 	{
-		return true;
+		return 1;
 	}
-	else if (firstElement < firstElement2)
-	{
-		return false;
-	}
-	else
-	{
-
-		if (secondElement > secondElement2)
-		{
-			return true;
-		}
-		else if (secondElement < secondElement2)
-		{
-			return false;
-		}
-		else
-		{
-			if (firstElement > firstElement2)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
+	else 
+		return 0;
+	
 }
 
-//bool IsBigger(string firstElement, string secondElement, string thirdElement, string firstElement2, string secondElement2, string thirdElement2)
-//{
-//
-//	if (firstElement > firstElement2)
-//	{
-//		return true;
-//	}
-//	else if (firstElement < firstElement2)
-//	{
-//		return false;
-//	}
-//	else
-//	{
-//
-//		if (secondElement > secondElement2)
-//		{
-//			return true;
-//		}
-//		else if (secondElement < secondElement2)
-//		{
-//			return false;
-//		}
-//		else
-//		{
-//			if (firstElement > firstElement2)
-//			{
-//				return true;
-//			}
-//			else
-//			{
-//				return false;
-//			}
-//		}
-//	}
-//}
-//
-
-void sort(Table* table, int root, int bottom, int code)
+void sorts(Table* table, int root, int bottom, int code)
 {
 	int maxChild;
 	int done = 0;
@@ -149,8 +87,7 @@ void sort(Table* table, int root, int bottom, int code)
 		else {
 			if (code == 0)
 			{
-				if (IsBigger(table->elements[root * 2 ].firstName, table->elements[root * 2].secondName, table->elements[root * 2 ].thirdName,
-					table->elements[root * 2 + 1].firstName,table->elements[root * 2 + 1].secondName, table->elements[root * 2 + 1].thirdName)) {
+				if (IsBigger(table->elements[root * 2 ].firstName, table->elements[root * 2 + 1].firstName)) {
 					maxChild = root * 2;
 				}
 				else {
@@ -159,8 +96,8 @@ void sort(Table* table, int root, int bottom, int code)
 			}
 			if (code == 1)
 			{
-				if (IsBigger(table->elements[root * 2].year, table->elements[root * 2].month, table->elements[root * 2].day,
-					table->elements[root * 2+1].year, table->elements[root * 2+1].month, table->elements[root * 2+1].day)) {
+				if (IsBigger(table->elements[root * 2].year, table->elements[root * 2+1].year ))
+				{
 					maxChild = root * 2;
 				}
 				else {
@@ -171,29 +108,27 @@ void sort(Table* table, int root, int bottom, int code)
 		}
 		if (code == 0)
 		{
-			if (IsBigger(table->elements[maxChild].firstName, table->elements[maxChild].secondName, table->elements[maxChild].thirdName,
-				table->elements[root].firstName, table->elements[root].secondName, table->elements[root].thirdName))
+			if (IsBigger(table->elements[maxChild].firstName, table->elements[root].firstName))
 			{
 				Element  temp = table->elements[root];
 				table->elements[root] = table->elements[maxChild];
 				table->elements[maxChild] = temp;
 				root = maxChild;
 			}
-			else done = 1; // пирамида сформирована
+			else done = 1; // РїРёСЂР°РјРёРґР° СЃС„РѕСЂРјРёСЂРѕРІР°РЅР°
 		}
 		if (code == 1)
 		{
-			if (IsBigger(table->elements[maxChild].year, table->elements[maxChild].month, table->elements[maxChild].day,
-				table->elements[root].year, table->elements[root].month, table->elements[root].day))
+			if (IsBigger(table->elements[maxChild].year, table->elements[root].year))
 			{
 				Element  temp = table->elements[root];
 				table->elements[root] = table->elements[maxChild];
 				table->elements[maxChild] = temp;
 				root = maxChild;
 			}
-			else done = 1; // пирамида сформирована
+			else done = 1; // РїРёСЂР°РјРёРґР° СЃС„РѕСЂРјРёСЂРѕРІР°РЅР°
 		}
-
+		
 	}
 
 }
@@ -203,7 +138,7 @@ void PiramidSort(Table* table, int code)
 	int size = table->count;
 	for (int i = (size / 2) - 1; i >= 0; i--)
 	{
-		sort(table, i, size - 1, code);
+		sorts(table, i, size - 1, code);
 
 	}
 	for (int i = size - 1; i >= 1; i--)
@@ -211,7 +146,7 @@ void PiramidSort(Table* table, int code)
 		Element temp = table->elements[0];
 		table->elements[0] = table->elements[i];
 		table->elements[i] = temp;
-		sort(table, 0, i - 1, code);
+		sorts(table, 0, i - 1, code);
 	}
 
 
@@ -226,28 +161,63 @@ void Print(Table* Guy)
 	}
 }
 
+bool isempty(ifstream& pFile)
+{
+	return pFile.peek() == ifstream::traits_type::eof();
+}
 
 void main() {
 
 	Table table;
 	setlocale(LC_ALL, "Russian");
 	fin.open("input.txt");
-	ReadFile(&table);
-	fin.close();
 
-	printf_s("Таблица до сортировки выглядит следующим образом:\n");
-	Print(&table);
-	printf_s("\n");
+	if (!fin)
+	{
+		cout << "file not open" << endl;
+	}
 
-	printf_s("Таблица после сортировки по Фамилии и имени:\n");
-	PiramidSort(&table, 0);
-	Print(&table);
-	printf_s("\n");
+	if (isempty(fin))
+	{
+		cout << "Table is empty" << endl;
+	}
+	else
+	{
+		ReadFile(&table);
+		fin.close();
 
-	printf_s("Таблица после сортировки по дате рождения:\n");
-	PiramidSort(&table, 1);
-	Print(&table);
-	printf_s("\n");
 
-	_getch();
+		cout << "РўР°Р±Р»РёС†Р° РґРѕ СЃРѕСЂС‚РёСЂРѕРІРєРё РІС‹РіР»СЏРґРёС‚ СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј:\n";
+		//Print(&table);
+		printf_s("\n");
+
+		cout << "РўР°Р±Р»РёС†Р° РїРѕСЃР»Рµ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ Р¤Р°РјРёР»РёРё Рё РёРјРµРЅРё:\n";
+		auto start = std::chrono::high_resolution_clock::now();
+		PiramidSort(&table, 0);
+		auto end = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> diff = end - start;
+		//Print(&table);
+		cout << "Time PiramidSortName " << diff.count() << endl;
+		printf_s("\n");
+
+		cout << "РўР°Р±Р»РёС†Р° РїРѕСЃР»Рµ СЃРѕСЂС‚РёСЂРѕРІРєРё РїРѕ РґР°С‚Рµ СЂРѕР¶РґРµРЅРёСЏ:\n";
+		auto start1 = std::chrono::high_resolution_clock::now();
+		PiramidSort(&table, 1);
+		auto end1 = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> diff1 = end1 - start1;
+		//Print(&table);
+		cout << "Time PiramidSortDate " << diff1.count() << endl;
+		printf_s("\n");
+
+		auto start2 = std::chrono::high_resolution_clock::now();
+
+		qsort(&(table.elements[0].month), table.count, sizeof(Element), IsBigger);
+
+		auto end2 = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> diff2 = end2 - start2;
+		Print(&table);
+		cout << "Time Qsort " << diff2.count() << endl;
+		system("pause");
+		//qsort_s()
+	}
 }
